@@ -1,8 +1,7 @@
 const router = require('express').Router(),
 	axios = require('axios'),
 	{ getLyrics, generateCover } = require('../utils/index'),
-	{ image_search } = require('duckduckgo-images-api'),
-	path = require('path');
+	{ image_search } = require('duckduckgo-images-api');
 
 router.post('/search', async (req, res) => {
 	try {
