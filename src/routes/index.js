@@ -1,6 +1,8 @@
 const router = require('express').Router(),
 	axios = require('axios'),
-	{ getLyrics } = require('../utils/index');
+	{ getLyrics, generateCover } = require('../utils/index'),
+	{ image_search } = require('duckduckgo-images-api'),
+	path = require('path');
 
 router.post('/search', async (req, res) => {
 	try {
@@ -57,6 +59,32 @@ router.post('/lyrics', async (req, res) => {
 				return res.sendStatus(404).end();
 			}
 		}
+	} catch (err) {
+		console.log(err);
+	}
+});
+
+router.post('/images', async (req, res) => {
+	try {
+		const { artist } = req.body;
+
+		let results = await image_search({ query: artist, moderate: true });
+		results = results.filter(({ width, height }) => width === height && width > 512);
+
+		res.json({ results }).end();
+	} catch (err) {
+		console.log(err);
+	}
+})
+
+router.post('/generate', async (req, res) => {
+	try {
+		const { verses, imageURL } = req.body;
+
+		generateCover(verses, imageURL);
+
+
+		res.end();
 	} catch (err) {
 		console.log(err);
 	}
